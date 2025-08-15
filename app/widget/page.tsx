@@ -45,7 +45,7 @@ export default function Widget() {
       >
         <span>{brand} — Quote Assistant</span>
         <button
-          className="ml-2 text-white hover:text-gray-200 focus:outline-none"
+          className="ml-2 text-white hover:text-gray-200 focus:outline-none cursor-pointer"
           aria-label="Close chat bot"
           onClick={() => setOpen(false)}
         >
