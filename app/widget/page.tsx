@@ -1,5 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Stage, useGLTF } from '@react-three/drei';
+
+function WizardModel() {
+  const { scene } = useGLTF('/wizard-10832742.glb');
+  return <primitive object={scene} />;
+}
 
 export default function Widget() {
   const params = new URLSearchParams(
@@ -50,6 +57,21 @@ export default function Widget() {
       <div className="p-3 space-y-2">
         <p className="m-0 text-black">Hi! I can collect the details we need for a homeowners quote.</p>
         {/* TODO: Replace with your stepper/intake UI */}
+        <div style={{ width: 120, height: 180, margin: '0 auto' }}>
+          <Canvas camera={{ position: [0, 1, 3], fov: 35 }}>
+            <ambientLight intensity={2.5} />
+            <directionalLight position={[2, 5, 2]} intensity={1.7} />
+            <Stage environment={null} intensity={0.6}>
+              <WizardModel />
+            </Stage>
+            <OrbitControls
+              enablePan={false}
+              enableZoom={false}
+              minPolarAngle={Math.PI / 2}
+              maxPolarAngle={Math.PI / 2}
+            />
+          </Canvas>
+        </div>
       </div>
     </div>
   );
