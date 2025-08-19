@@ -19,25 +19,12 @@ export default function Widget() {
     return () => window.removeEventListener('message', onMsg);
   }, []);
 
-  if (!open) {
-    return (
-      <button
-        className="fixed bottom-6 right-6 z-[9999] w-16 h-16 rounded-full shadow-2xl flex items-center justify-center border-2 border-white cursor-pointer"
-        style={{ background: 'var(--purple-gradient)' }}
-        aria-label="Open chat bot"
-        onClick={() => setOpen(true)}
-      >
-        {/* Chat icon SVG */}
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-      </button>
-    );
-  }
+  // Only render the chat UI if open
+  if (open) return null;
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-[9999] font-sans w-[360px] max-w-full h-[520px] flex flex-col rounded-2xl shadow-2xl overflow-hidden border border-black/10 bg-white"
+      className="z-[9999] font-sans w-[360px] max-w-full h-[520px] flex flex-col rounded-2xl shadow-2xl overflow-hidden border border-black/10 bg-white"
     >
       <div
         className="flex items-center justify-between px-4 py-3 font-semibold text-white"
@@ -47,7 +34,12 @@ export default function Widget() {
         <button
           className="ml-2 text-white hover:text-gray-200 focus:outline-none cursor-pointer"
           aria-label="Close chat bot"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            if (window.parent) {
+              window.parent.postMessage({ type: 'mojo:close' }, '*');
+            }
+            setOpen(false); // fallback for standalone
+          }}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -56,7 +48,7 @@ export default function Widget() {
         </button>
       </div>
       <div className="p-3 space-y-2">
-        <p className="m-0">Hi! I can collect the details we need for a homeowners quote.</p>
+        <p className="m-0 text-black">Hi! I can collect the details we need for a homeowners quote.</p>
         {/* TODO: Replace with your stepper/intake UI */}
       </div>
     </div>
